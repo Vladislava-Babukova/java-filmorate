@@ -19,7 +19,7 @@ public class UserHandler {
 
     public User create(User user) {
         if (user.getBirthday().isBefore(dateNow)) {
-            if (user.getName().isBlank()) {
+            if (user.getName()==null ||user.getName().isBlank()) {
                 user.setName(user.getLogin());
             }
             user.setId(++generateId);
