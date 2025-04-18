@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,10 +24,6 @@ class UserControllerTest {
     private MockMvc mockMvc;
     UserController userController;
 
-    @BeforeEach
-    void setUp() {
-        userController = new UserController();
-    }
 
     @Test
     void create() throws Exception {
@@ -65,11 +60,8 @@ class UserControllerTest {
 
     }
 
-    private String getContentFromFile(String filename) {
-        try {
-            return Files.readString(ResourceUtils.getFile("classpath:" + filename).toPath(), StandardCharsets.UTF_8);
-        } catch (IOException exception) {
-            throw new RuntimeException("Не открывается файл", exception);
-        }
+    private String getContentFromFile(String filename) throws IOException {
+
+        return Files.readString(ResourceUtils.getFile("classpath:" + filename).toPath(), StandardCharsets.UTF_8);
     }
 }

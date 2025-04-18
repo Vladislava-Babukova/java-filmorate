@@ -25,10 +25,6 @@ class FilmControllerTest {
     private MockMvc mockMvc;
     FilmController filmController;
 
-    @BeforeEach
-    void setUp() {
-        filmController = new FilmController();
-    }
 
     @Test
     void create() throws Exception {
@@ -65,11 +61,8 @@ class FilmControllerTest {
 
     }
 
-    private String getContentFromFile(String filename) {
-        try {
-            return Files.readString(ResourceUtils.getFile("classpath:" + filename).toPath(), StandardCharsets.UTF_8);
-        } catch (IOException exception) {
-            throw new RuntimeException("Не открывается файл", exception);
-        }
+    private String getContentFromFile(String filename) throws IOException {
+
+        return Files.readString(ResourceUtils.getFile("classpath:" + filename).toPath(), StandardCharsets.UTF_8);
     }
 }

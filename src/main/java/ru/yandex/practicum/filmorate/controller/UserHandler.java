@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.springframework.util.StringUtils;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -19,7 +20,7 @@ public class UserHandler {
 
     public User create(User user) {
         if (user.getBirthday().isBefore(dateNow)) {
-            if (user.getName() == null || user.getName().isBlank()) {
+            if (!StringUtils.hasText(user.getName())) {
                 user.setName(user.getLogin());
             }
             user.setId(++generateId);
@@ -36,7 +37,7 @@ public class UserHandler {
             if (!storageUser.containsKey(user.getId())) {
                 throw new DataNotFoundException("Пользователь не найден");
             }
-            if (user.getName() == null || user.getName().isBlank()) {
+            if (!StringUtils.hasText(user.getName())) {
                 user.setName(user.getLogin());
             }
             storageUser.put(user.getId(), user);
