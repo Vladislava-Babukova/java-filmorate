@@ -22,7 +22,6 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    UserController userController;
 
 
     @Test
