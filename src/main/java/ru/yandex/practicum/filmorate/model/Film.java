@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Film.
@@ -24,4 +26,6 @@ public class Film {
     private LocalDate releaseDate;
     @Min(1)
     private Long duration;
+
+    private Set<Long> likeSet = new HashSet<>();
 }

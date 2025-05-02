@@ -5,14 +5,17 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class User {
-    long id;
+    private long id;
     @Email
-    String email;
+    private String email;
     @NotBlank
-    String login;
+    private String login;
     String name;
-    LocalDate birthday;
+    private LocalDate birthday;
+    private Set<Long> frendSet = new HashSet<>();
 }
