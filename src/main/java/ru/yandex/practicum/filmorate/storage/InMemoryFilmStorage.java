@@ -14,15 +14,23 @@ public class InMemoryFilmStorage implements FilmStorage {
 
 
     public Film create(Film film) {
-        if (storageFilm.containsKey(film.getId())) {
+        if (exists(film)) {
             throw new DataAlreadyExistExeption("Данный фильм уже существует");
         }
         storageFilm.put(film.getId(), film);
         return film;
     }
 
+    private boolean exists(Film film) {
+        if (storageFilm.containsKey(film.getId())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public Film update(Film film) {
-        if (!storageFilm.containsKey(film.getId())) {
+        if (!exists(film)) {
             throw new DataNotFoundException("Фильм не найден");
         }
         storageFilm.put(film.getId(), film);

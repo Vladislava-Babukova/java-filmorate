@@ -13,7 +13,7 @@ public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> storageUser = new HashMap<>();
 
     public User create(User user) {
-        if (storageUser.containsKey(user.getId())) {
+        if (exists(user)) {
             throw new DataAlreadyExistExeption("Данный пользователь уже существует");
         }
         storageUser.put(user.getId(), user);
@@ -21,11 +21,19 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     public User update(User user) {
-        if (!storageUser.containsKey(user.getId())) {
+        if (!exists(user)) {
             throw new DataNotFoundException("Пользователь не найден");
         }
         storageUser.put(user.getId(), user);
         return user;
+    }
+
+    private boolean exists(User user) {
+        if (storageUser.containsKey(user.getId())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public List<User> getAllUsers() {
