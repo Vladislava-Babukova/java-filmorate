@@ -10,8 +10,6 @@ import java.util.*;
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Long, Film> storageFilm = new HashMap<>();
-    private final Set<Long> likeSet = new HashSet<>();
-
 
     public Film create(Film film) {
         if (exists(film)) {

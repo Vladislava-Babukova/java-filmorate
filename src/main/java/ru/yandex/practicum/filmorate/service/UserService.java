@@ -19,23 +19,28 @@ public class UserService {
     private LocalDate dateNow = LocalDate.now();
     private final InMemoryUserStorage storage;
 
-    public void validation(User user) {
+    public void checkBirthday(User user) {
         if (user.getBirthday().isAfter(dateNow)) {
             throw new ValidationException("Дата рождения некорректна");
         }
+    }
+
+    public void nameCreate(User user) {
         if (!StringUtils.hasText(user.getName())) {
             user.setName(user.getLogin());
         }
     }
 
     public User create(User user) {
-        validation(user);
+        checkBirthday(user);
+        nameCreate(user);
         user.setId(++generateId);
         return storage.create(user);
     }
 
     public User update(User user) {
-        validation(user);
+        checkBirthday(user);
+        nameCreate(user);
         return storage.update(user);
 
     }
@@ -87,4 +92,7 @@ public class UserService {
     }
 
 
+    public User getUser(Long userId) {
+        return storage.getUser(userId);
+    }
 }
