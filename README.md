@@ -1,7 +1,7 @@
 # java-filmorate
 Template repository for Filmorate project.
 
-![bd.drawio.png](src/main/resources/bd.drawio.png)
+![bdDiagram.drawio.png](src/main/resources/bdDiagram.drawio.png)
 
 примеры запросов:
 - получение топ-10 фильмов по количеству лайков
