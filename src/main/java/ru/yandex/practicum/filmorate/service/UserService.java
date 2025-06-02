@@ -60,9 +60,9 @@ public class UserService {
         return storage.addFriend(id, friendId);
     }
 
-    public Set<User> getFriends(Long user_id) {
+    public Set<User> getFriends(Long userId) {
 
-        return storage.getFriends(user_id);
+        return storage.getFriends(userId);
     }
 
     public User deleteFriend(Long id, Long friendId) {

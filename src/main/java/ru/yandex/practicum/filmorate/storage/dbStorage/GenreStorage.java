@@ -8,5 +8,5 @@ public interface GenreStorage {
 
     public List<Genre> getAllGenres();
 
-    public Genre getGenre(Long genre_id);
+    public Genre getGenre(Long genreId);
 }

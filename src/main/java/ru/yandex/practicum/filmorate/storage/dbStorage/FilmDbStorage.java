@@ -308,7 +308,6 @@ public class FilmDbStorage implements FilmStorage {
                 String insertQuery = "DELETE FROM likes WHERE film_id = ? AND user_id = ?";
                 jdbcTemplate.update(insertQuery, filmId, userId);
                 likeSet.remove(userId);
-                film.setLikeSet(likeSet);
                 return film;
             } else {
                 throw new DataNotFoundException("запись не найдена");

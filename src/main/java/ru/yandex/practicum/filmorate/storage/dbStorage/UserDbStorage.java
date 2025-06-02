@@ -112,9 +112,9 @@ public class UserDbStorage implements UserStorage {
         return user;
     }
 
-    public Boolean checkId(Long user_id) {
+    public Boolean checkId(Long userId) {
         String checkUser = "SELECT COUNT(*) FROM users WHERE user_id = ?";
-        Integer userCount = jdbcTemplate.queryForObject(checkUser, Integer.class, user_id);
+        Integer userCount = jdbcTemplate.queryForObject(checkUser, Integer.class, userId);
         if (userCount == null || userCount == 0) {
             return false;
         } else {
@@ -123,10 +123,10 @@ public class UserDbStorage implements UserStorage {
     }
 
 
-    public Set<User> getFriends(Long user_id) {
-        if (checkId(user_id)) {
+    public Set<User> getFriends(Long userId) {
+        if (checkId(userId)) {
             String friendSgl = "SELECT * FROM users WHERE user_id IN (SELECT friend_id FROM friends WHERE user_id = ?)";
-            List<User> friendsList = jdbcTemplate.query(friendSgl, userRowMapper, user_id);
+            List<User> friendsList = jdbcTemplate.query(friendSgl, userRowMapper, userId);
             return new HashSet<>(friendsList);
         } else throw new DataNotFoundException("запись не найдена");
     }
