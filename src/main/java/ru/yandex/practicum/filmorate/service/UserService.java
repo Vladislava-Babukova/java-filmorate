@@ -6,7 +6,7 @@ import org.springframework.util.StringUtils;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +17,8 @@ import java.util.Set;
 public class UserService {
     private long generateId = 0;
     private LocalDate dateNow = LocalDate.now();
-    private final InMemoryUserStorage storage;
+    private final UserStorage
+            storage;
 
     public void checkBirthday(User user) {
         if (user.getBirthday().isAfter(dateNow)) {
@@ -55,15 +56,13 @@ public class UserService {
         if (user == null || friend == null) {
             throw new DataNotFoundException("Пользователь не найден");
         }
-        Set<Long> list = user.getFrendSet();
-        Set<Long> listFriend = friend.getFrendSet();
-        list.add(friendId);
-        listFriend.add(id);
-        user.setFrendSet(list);
-        friend.setFrendSet(listFriend);
-        storage.update(user);
-        storage.update(friend);
-        return user;
+
+        return storage.addFriend(id, friendId);
+    }
+
+    public Set<User> getFriends(Long user_id) {
+
+        return storage.getFriends(user_id);
     }
 
     public User deleteFriend(Long id, Long friendId) {
@@ -72,27 +71,17 @@ public class UserService {
         if (user == null || friend == null) {
             throw new DataNotFoundException("Пользователь не найден");
         }
-        Set<Long> list = user.getFrendSet();
-        Set<Long> listFriend = friend.getFrendSet();
-        list.remove(friendId);
-        listFriend.remove(id);
-        user.setFrendSet(list);
-        friend.setFrendSet(listFriend);
-        storage.update(user);
-        storage.update(friend);
+        user = storage.deleteFriend(id, friendId);
         return user;
     }
 
-    public List<User> mutualFriends(Long id, Long otherId) {
-        return storage.mutualFriends(id, otherId);
-    }
-
-    public List<User> getUsersFriends(Long id) {
-        return storage.getUsersFriends(id);
+    public Set<User> mutualFriends(Long id, Long otherId) {
+        return storage.getCommonFriends(id, otherId);
     }
 
 
     public User getUser(Long userId) {
         return storage.getUser(userId);
     }
+
 }
