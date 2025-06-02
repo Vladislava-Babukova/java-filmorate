@@ -124,11 +124,13 @@ public class UserDbStorage implements UserStorage {
 
 
     public Set<User> getFriends(Long userId) {
-        if (checkId(userId)) {
-            String friendSgl = "SELECT * FROM users WHERE user_id IN (SELECT friend_id FROM friends WHERE user_id = ?)";
-            List<User> friendsList = jdbcTemplate.query(friendSgl, userRowMapper, userId);
-            return new HashSet<>(friendsList);
-        } else throw new DataNotFoundException("запись не найдена");
+        if (!checkId(userId)) {
+            throw new DataNotFoundException("запись не найдена");
+        }
+        String friendSgl = "SELECT * FROM users WHERE user_id IN (SELECT friend_id FROM friends WHERE user_id = ?)";
+        List<User> friendsList = jdbcTemplate.query(friendSgl, userRowMapper, userId);
+        return new HashSet<>(friendsList);
+
     }
 
     public User deleteFriend(Long userId, Long friendId) {

@@ -6,24 +6,24 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import java.util.List;
 
 public interface FilmStorage {
-    public Film create(Film film);
+    Film create(Film film);
 
-    public Film update(Film film);
+    Film update(Film film);
 
-    public List<Film> getAllFilms();
+    List<Film> getAllFilms();
 
-    public Film getFilm(Long filmId);
+    Film getFilm(Long filmId);
 
-    public List<Film> topFilms(int count);
+    List<Film> topFilms(int count);
 
-    public void saveGenre(Film film);
+    void saveGenre(Film film);
 
-    public Film addMpa(Film film);
+    Film addMpa(Film film);
 
-    public List<Genre> addGenre(Film film);
+    List<Genre> addGenre(Film film);
 
-    public Film addLike(Long filmId, Long userId);
+    Film addLike(Long filmId, Long userId);
 
-    public Film deleteLike(Long filmId, Long userId);
+    Film deleteLike(Long filmId, Long userId);
 
 }

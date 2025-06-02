@@ -14,7 +14,11 @@ import java.util.List;
 public class GenreDBStorage implements GenreStorage {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private final GenreRowMapper genreRowMapper = new GenreRowMapper();
+    private final GenreRowMapper genreRowMapper;
+
+    public GenreDBStorage(GenreRowMapper genreRowMapper) {
+        this.genreRowMapper = genreRowMapper;
+    }
 
     @Override
     public List<Genre> getAllGenres() {

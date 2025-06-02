@@ -26,20 +26,16 @@ import java.util.stream.Collectors;
 @Repository
 
 public class FilmDbStorage implements FilmStorage {
-
+    @Autowired
     private FilmRowMapper filmRowMapper;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private GenreStorage genreStorage;
+    @Autowired
     private GenreRowMapper genreRowMapper;
+    @Autowired
     private MpaRowMapper mpaRowMapper;
-
-    public FilmDbStorage(JdbcTemplate jdbcTemplate) {
-        this.filmRowMapper = new FilmRowMapper();
-        this.genreRowMapper = new GenreRowMapper();
-        this.mpaRowMapper = new MpaRowMapper();
-    }
-
 
     public Film create(Film film) {
         if (film == null) {
@@ -292,29 +288,26 @@ public class FilmDbStorage implements FilmStorage {
         Integer userCount = jdbcTemplate.queryForObject(checkUser, Integer.class, userId);
         if (userCount == null || userCount == 0 || filmCount == null || filmCount == 0) {
             throw new DataNotFoundException("Данные не найдены");
-        } else {
-            return true;
         }
+        return true;
     }
 
     @Override
     public Film deleteLike(Long filmId, Long userId) {
         Film film = getFilm(filmId);
         Set<Long> likeSet = film.getLikeSet();
-        if (checkIdLike(filmId, userId)) {
-            String checkQuery = "SELECT COUNT(*) FROM likes WHERE film_id = ? AND user_id = ?";
-            Integer count = jdbcTemplate.queryForObject(checkQuery, Integer.class, filmId, userId);
-            if (count > 0) {
-                String insertQuery = "DELETE FROM likes WHERE film_id = ? AND user_id = ?";
-                jdbcTemplate.update(insertQuery, filmId, userId);
-                likeSet.remove(userId);
-                return film;
-            } else {
-                throw new DataNotFoundException("запись не найдена");
-            }
-        } else {
+        if (!checkIdLike(filmId, userId)) {
             throw new DataNotFoundException("запись не найдена");
         }
+        String checkQuery = "SELECT COUNT(*) FROM likes WHERE film_id = ? AND user_id = ?";
+        Integer count = jdbcTemplate.queryForObject(checkQuery, Integer.class, filmId, userId);
+        if (count < 1) {
+            throw new DataNotFoundException("запись не найдена");
+        }
+        String insertQuery = "DELETE FROM likes WHERE film_id = ? AND user_id = ?";
+        jdbcTemplate.update(insertQuery, filmId, userId);
+        likeSet.remove(userId);
+        return film;
     }
 }
 

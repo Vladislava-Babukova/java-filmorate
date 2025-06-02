@@ -29,9 +29,7 @@ public class FilmService {
         if (film.getReleaseDate().isBefore(RELEASE_DATE)) {
             throw new ValidationException("Дата некорректна");
         }
-        if (film.getName() == null) {
-            throw new ValidationException("Имя некорректно");
-        }
+
         if (film.getDescription().length() > 200) {
             throw new ValidationException("Описание некорректно");
         }

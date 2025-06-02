@@ -14,7 +14,11 @@ import java.util.List;
 public class MpaDbStorage implements MpaStorage {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private final MpaRowMapper mpaRowMapper = new MpaRowMapper();
+    private final MpaRowMapper mpaRowMapper;
+
+    public MpaDbStorage(MpaRowMapper mpaRowMapper) {
+        this.mpaRowMapper = mpaRowMapper;
+    }
 
     @Override
     public List<Mpa> getAllMpa() {
