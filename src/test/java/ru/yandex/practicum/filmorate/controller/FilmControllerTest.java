@@ -101,7 +101,11 @@ class FilmControllerTest {
 
         List<Film> popularFilms = List.of(
                 testFilm,
-                Film.builder().id(2L).name("Фильм 2").build()
+                Film.builder()
+                        .id(2L)
+                        .name("Фильм 2")
+                        .releaseDate(LocalDate.of(2020, 1, 1))
+                        .build()
         );
 
         when(filmService.getPopularFilms(count, genreId, year))
@@ -114,7 +118,7 @@ class FilmControllerTest {
                                 .param("year", String.valueOf(year))
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))  // Ожидаем 2 фильма
+                .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id").value(testFilm.getId()))
                 .andExpect(jsonPath("$[1].name").value("Фильм 2"));
 
