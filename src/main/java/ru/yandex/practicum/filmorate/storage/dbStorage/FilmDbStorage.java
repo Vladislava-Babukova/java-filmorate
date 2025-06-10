@@ -46,7 +46,7 @@ public class FilmDbStorage implements FilmStorage {
         }
 
         String query = "INSERT INTO FILMS (name, description, release_date, duration, rating_id)" +
-                "values(?,?,?,?,?)";
+                       "values(?,?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement stmt = con.prepareStatement(query, new String[]{"film_id"});
@@ -244,18 +244,34 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
-    @Override
-    public List<Film> topFilms(int count) {
-        String query = "SELECT f.film_id " +
-                "FROM films AS f " +
-                "LEFT JOIN likes AS l ON f.film_id = l.film_id " +
-                "GROUP BY f.film_id " +
-                "ORDER BY COUNT(l.user_id) DESC, f.film_id ASC " +
-                "LIMIT ?";
+    // Обновлена логика в связи с добавлением доп параметров, добавлена проверка на пустой список.
 
-        List<Long> filmIds = jdbcTemplate.query(query,
+    @Override
+    public List<Film> getPopularFilms(int count, Integer genreId, Integer year) {
+
+        String query = """
+                SELECT f.film_id
+                FROM films f
+                LEFT JOIN likes l ON f.film_id = l.film_id
+                LEFT JOIN film_genres fg ON f.film_id = fg.film_id
+                WHERE (? IS NULL OR fg.genre_id = ?)
+                  AND (? IS NULL OR EXTRACT(YEAR FROM f.release_date) = ?)
+                GROUP BY f.film_id
+                ORDER BY COUNT(l.user_id) DESC
+                LIMIT ?
+                """;
+
+        List<Long> filmIds = jdbcTemplate.query(
+                query,
                 (rs, rowNum) -> rs.getLong("film_id"),
-                count);
+                genreId, genreId,
+                year, year,
+                count
+        );
+
+        if (filmIds.isEmpty()) {
+            return Collections.emptyList();
+        }
 
         return filmIds.stream()
                 .map(this::getFilm)
@@ -310,4 +326,3 @@ public class FilmDbStorage implements FilmStorage {
         return film;
     }
 }
-

@@ -56,16 +56,16 @@ public class FilmService {
 
     }
 
-    public List<Film> topFilms(Integer count) {
-        if (count < 1) {
-            throw new ValidationException("Некорректное значение размера");
-        }
-        return storage.topFilms(count);
+    // добавлены необходимые для новой логики параметры метода
 
+    public List<Film> getPopularFilms(int count, Integer genreId, Integer year) {
+        if (count < 1) {
+            throw new ValidationException("Некорректное значение count");
+        }
+        return storage.getPopularFilms(count, genreId, year);
     }
 
     public Film getFilm(Long id) {
         return storage.getFilm(id);
     }
-
 }
