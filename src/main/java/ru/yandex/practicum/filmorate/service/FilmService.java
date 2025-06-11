@@ -61,11 +61,14 @@ public class FilmService {
             throw new ValidationException("Некорректное значение размера");
         }
         return storage.topFilms(count);
-
     }
 
     public Film getFilm(Long id) {
         return storage.getFilm(id);
     }
 
+    //добавлена функция выдачи списка фильмов режисёра по его айди
+    public List<Film> getFilmsByDirector(Long directorId, String sortBy) {
+        return storage.getFilmsByDirector(directorId, sortBy);
+    }
 }

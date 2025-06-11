@@ -54,4 +54,13 @@ public class FilmController {
         return service.getFilm(id);
     }
 
+    //добавлена функция выдачи списка фильмов режисёра по его айди
+    @GetMapping("/director/{directorId}")
+    public List<Film> getFilmsByDirector(@PathVariable Long directorId,
+                                         @RequestParam(value = "sortBy", required = false, defaultValue = "year") String sortBy) {
+        if (!sortBy.equals("year") && !sortBy.equals("likes")) {
+            throw new IllegalArgumentException("Параметр sortBy должен быть 'year' или 'likes'");
+        }
+        return service.getFilmsByDirector(directorId, sortBy);
+    }
 }
