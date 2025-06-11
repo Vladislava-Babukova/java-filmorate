@@ -14,10 +14,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FilmService {
 
+    private static final LocalDate RELEASE_DATE = LocalDate.of(1895, Month.DECEMBER, 28);
     private final FilmStorage storage;
     private final UserService userService;
-    private static final LocalDate RELEASE_DATE = LocalDate.of(1895, Month.DECEMBER, 28);
-    private long generateId = 0;
+    private final long generateId = 0;
 
 
     public Film create(Film film) {
@@ -56,11 +56,13 @@ public class FilmService {
 
     }
 
-    public List<Film> topFilms(Integer count) {
+    // добавлены необходимые для новой логики параметры метода
+
+    public List<Film> getPopularFilms(int count, Integer genreId, Integer year) {
         if (count < 1) {
-            throw new ValidationException("Некорректное значение размера");
+            throw new ValidationException("Некорректное значение count");
         }
-        return storage.topFilms(count);
+        return storage.getPopularFilms(count, genreId, year);
     }
 
     public Film getFilm(Long id) {

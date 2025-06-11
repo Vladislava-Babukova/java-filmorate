@@ -34,9 +34,15 @@ public class FilmController {
         return service.getAllFilms();
     }
 
+    /* новый метод так же, как и старый, включает в себя параметр count,
+    но при этом использует тот же путь для эндпоинта /popular */
     @GetMapping("/popular")
-    public List<Film> topFilms(@RequestParam(required = false, defaultValue = "10") Integer count) {
-        return service.topFilms(count);
+    public List<Film> getPopularFilms(
+            @RequestParam(defaultValue = "10") int count,
+            @RequestParam(required = false) Integer genreId,
+            @RequestParam(required = false) Integer year) {
+
+        return service.getPopularFilms(count, genreId, year);
     }
 
     @PutMapping("/{filmId}/like/{userId}")
