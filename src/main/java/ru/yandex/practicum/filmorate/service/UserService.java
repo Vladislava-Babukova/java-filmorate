@@ -15,10 +15,10 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private long generateId = 0;
-    private LocalDate dateNow = LocalDate.now();
     private final UserStorage
             storage;
+    private long generateId = 0;
+    private final LocalDate dateNow = LocalDate.now();
 
     public void checkBirthday(User user) {
         if (user.getBirthday().isAfter(dateNow)) {

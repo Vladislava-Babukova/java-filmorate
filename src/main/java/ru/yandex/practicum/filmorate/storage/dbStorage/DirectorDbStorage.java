@@ -73,8 +73,8 @@ public class DirectorDbStorage implements DirectorStorage {
         }
 
         String query = "UPDATE directors SET " +
-                "name = ? " +
-                "WHERE id = ?";
+                       "name = ? " +
+                       "WHERE id = ?";
         jdbcTemplate.update(con -> {
             PreparedStatement stmt = con.prepareStatement(query, new String[]{"id"});
             stmt.setLong(2, director.getId());

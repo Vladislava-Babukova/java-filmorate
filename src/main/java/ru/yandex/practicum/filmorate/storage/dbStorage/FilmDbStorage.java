@@ -350,20 +350,20 @@ public class FilmDbStorage implements FilmStorage {
     public List<Film> getFilmsByDirector(Long directorId, String sortBy) {
 
         String queryLike = "SELECT f.* " +
-                "FROM films AS f " +
-                "LEFT JOIN film_directors AS fd ON f.film_id = fd.film_id " +
-                "LEFT JOIN likes AS l ON f.film_id = l.film_id " +
-                "WHERE fd.director_id = ? " +
-                "GROUP BY f.film_id " +
-                "ORDER BY COUNT(l.film_id) DESC;";
+                           "FROM films AS f " +
+                           "LEFT JOIN film_directors AS fd ON f.film_id = fd.film_id " +
+                           "LEFT JOIN likes AS l ON f.film_id = l.film_id " +
+                           "WHERE fd.director_id = ? " +
+                           "GROUP BY f.film_id " +
+                           "ORDER BY COUNT(l.film_id) DESC;";
 
 
         String queryYear = "SELECT f.* " +
-                "FROM films AS f " +
-                "LEFT JOIN film_directors AS fd ON f.film_id = fd.film_id " +
-                "LEFT JOIN likes AS l ON f.film_id = l.film_id " +
-                "WHERE fd.director_id = ? " +
-                "ORDER BY f.release_date ;";
+                           "FROM films AS f " +
+                           "LEFT JOIN film_directors AS fd ON f.film_id = fd.film_id " +
+                           "LEFT JOIN likes AS l ON f.film_id = l.film_id " +
+                           "WHERE fd.director_id = ? " +
+                           "ORDER BY f.release_date ;";
 
         List<Film> filmByDirectors;
         if (sortBy.equals("likes")) {
@@ -379,5 +379,4 @@ public class FilmDbStorage implements FilmStorage {
                 .collect(Collectors.toUnmodifiableList());
         return filmByDirectors;
     }
-}
 }

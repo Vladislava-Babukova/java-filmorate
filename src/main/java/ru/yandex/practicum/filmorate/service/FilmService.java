@@ -14,10 +14,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FilmService {
 
+    private static final LocalDate RELEASE_DATE = LocalDate.of(1895, Month.DECEMBER, 28);
     private final FilmStorage storage;
     private final UserService userService;
-    private static final LocalDate RELEASE_DATE = LocalDate.of(1895, Month.DECEMBER, 28);
-    private long generateId = 0;
+    private final long generateId = 0;
 
 
     public Film create(Film film) {
