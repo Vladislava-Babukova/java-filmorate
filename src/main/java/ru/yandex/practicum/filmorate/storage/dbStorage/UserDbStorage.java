@@ -156,5 +156,22 @@ public class UserDbStorage implements UserStorage {
         return new HashSet<>(commonFriends);
     }
 
+    @Override
+    public List<Long> findUsersWithSimilarTastes(Long userId) {
+        String sql = "SELECT l2.user_id " +
+                     "FROM likes l1 " +
+                     "JOIN likes l2 ON l1.film_id = l2.film_id AND l2.user_id != l1.user_id " +
+                     "WHERE l1.user_id = ? " +
+                     "GROUP BY l2.user_id " +
+                     "ORDER BY COUNT(l2.film_id) DESC " +
+                     "LIMIT 1";
 
+        return jdbcTemplate.queryForList(sql, Long.class, userId);
+    }
+
+    @Override
+    public List<Long> getFilmsLikedByUser(Long userId) {
+        String sql = "SELECT film_id FROM likes WHERE user_id = ?";
+        return jdbcTemplate.queryForList(sql, Long.class, userId);
+    }
 }
