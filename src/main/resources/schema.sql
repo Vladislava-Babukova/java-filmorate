@@ -7,7 +7,9 @@ drop table if exists
     likes,
     friends,
     directors,
-    film_directors;
+    film_directors,
+    reviews,
+    grades_reviews;
 
 
 CREATE TABLE IF NOT EXISTS ratings
@@ -235,6 +237,54 @@ CREATE TABLE IF NOT EXISTS friends
     user_id
 ) ON DELETE CASCADE
     );
+
+    CREATE TABLE IF NOT EXISTS reviews
+    (
+        review_id
+        BIGINT
+        GENERATED
+        BY
+        DEFAULT AS
+        IDENTITY
+        PRIMARY
+        KEY,
+        content
+        VARCHAR(255)
+        NOT NULL,
+        is_positive
+        BOOLEAN
+        NOT NULL,
+        user_id
+        BIGINT
+        NOT NULL,
+        film_id
+        BIGINT
+        NOT NULL,
+        useful
+        BIGINT
+        DEFAULT 0
+        );
+
+    CREATE TABLE IF NOT EXISTS grades_reviews
+         (
+         id
+         BIGINT
+         GENERATED
+         BY
+         DEFAULT AS
+         IDENTITY
+         PRIMARY
+         KEY,
+         user_id
+         BIGINT
+         NOT NULL,
+         grade
+         VARCHAR(10)
+         NOT NULL,
+         review_id
+         BIGINT
+         NOT NULL
+         );
 
 
 
