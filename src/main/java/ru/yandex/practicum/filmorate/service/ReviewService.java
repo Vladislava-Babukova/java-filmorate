@@ -33,8 +33,6 @@ public class ReviewService {
     }
 
     public Review crete(@Valid Review review) {
-        userStorage.getUser(review.getUserId());
-        filmStorage.getFilm(review.getFilmId());
         if (review.getUseful() == null) {
             review.setUseful(0L);
         }
@@ -44,6 +42,8 @@ public class ReviewService {
         if (review.getIsPositive() == null) {
             throw new ValidationException("не указан тип отзыва");
         }
+        userStorage.getUser(review.getUserId());
+        filmStorage.getFilm(review.getFilmId());
         return reviewStorage.create(review);
     }
 
