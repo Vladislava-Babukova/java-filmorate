@@ -25,4 +25,6 @@ public interface UserStorage {
     List<Long> findUsersWithSimilarTastes(Long userId);
 
     List<Long> getFilmsLikedByUser(Long userId);
+
+    void deleteFilm(Long id);
 }
