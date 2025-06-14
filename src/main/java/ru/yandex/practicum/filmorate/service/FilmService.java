@@ -73,4 +73,8 @@ public class FilmService {
     public List<Film> getFilmsByDirector(Long directorId, String sortBy) {
         return storage.getFilmsByDirector(directorId, sortBy);
     }
+
+    public void deleteFilm(Long id) {
+        storage.deleteFilm(id);
+    }
 }

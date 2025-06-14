@@ -32,7 +32,7 @@ public class UserDbStorage implements UserStorage {
         }
 
         String query = "INSERT INTO users (name, login, email, birthday)" +
-                       "values(?,?,?,?)";
+                "values(?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement stmt = con.prepareStatement(query, new String[]{"user_id"});
@@ -62,11 +62,11 @@ public class UserDbStorage implements UserStorage {
             throw new DataNotFoundException("пользователь с ID " + user.getId() + " не найден");
         }
         String query = "UPDATE users SET " +
-                       "name = ?, " +
-                       "login = ?, " +
-                       "email = ?, " +
-                       "birthday = ? " +
-                       "WHERE user_id = ?";
+                "name = ?, " +
+                "login = ?, " +
+                "email = ?, " +
+                "birthday = ? " +
+                "WHERE user_id = ?";
         jdbcTemplate.update(con -> {
             PreparedStatement stmt = con.prepareStatement(query, new String[]{"user_id"});
             stmt.setLong(5, user.getId());
@@ -148,8 +148,8 @@ public class UserDbStorage implements UserStorage {
             throw new DataNotFoundException("Один из пользователей не найден");
         }
         String sql = "SELECT u.* FROM users u\n" +
-                     "        JOIN friends f1 ON u.user_id = f1.friend_id AND f1.user_id = ?\n" +
-                     "        JOIN friends f2 ON u.user_id = f2.friend_id AND f2.user_id = ?";
+                "        JOIN friends f1 ON u.user_id = f1.friend_id AND f1.user_id = ?\n" +
+                "        JOIN friends f2 ON u.user_id = f2.friend_id AND f2.user_id = ?";
 
         List<User> commonFriends = jdbcTemplate.query(sql, userRowMapper, userId, friendId);
 
@@ -159,12 +159,12 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<Long> findUsersWithSimilarTastes(Long userId) {
         String sql = "SELECT l2.user_id " +
-                     "FROM likes l1 " +
-                     "JOIN likes l2 ON l1.film_id = l2.film_id AND l2.user_id != l1.user_id " +
-                     "WHERE l1.user_id = ? " +
-                     "GROUP BY l2.user_id " +
-                     "ORDER BY COUNT(l2.film_id) DESC " +
-                     "LIMIT 1";
+                "FROM likes l1 " +
+                "JOIN likes l2 ON l1.film_id = l2.film_id AND l2.user_id != l1.user_id " +
+                "WHERE l1.user_id = ? " +
+                "GROUP BY l2.user_id " +
+                "ORDER BY COUNT(l2.film_id) DESC " +
+                "LIMIT 1";
 
         return jdbcTemplate.queryForList(sql, Long.class, userId);
     }
@@ -173,5 +173,11 @@ public class UserDbStorage implements UserStorage {
     public List<Long> getFilmsLikedByUser(Long userId) {
         String sql = "SELECT film_id FROM likes WHERE user_id = ?";
         return jdbcTemplate.queryForList(sql, Long.class, userId);
+    }
+
+    @Override
+    public void deleteFilm(Long id) {
+        String insertQuery = "DELETE FROM users WHERE user_id = ?";
+        jdbcTemplate.update(insertQuery, id);
     }
 }
