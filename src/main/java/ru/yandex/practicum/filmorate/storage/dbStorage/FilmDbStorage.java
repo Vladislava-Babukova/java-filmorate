@@ -385,7 +385,7 @@ public class FilmDbStorage implements FilmStorage {
         String query = """
                 SELECT film_id
                 FROM likes
-                WHERE film_id IN 
+                WHERE film_id IN
                 (
                 SELECT film_id
                 FROM likes
