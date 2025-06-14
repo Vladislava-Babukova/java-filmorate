@@ -117,4 +117,8 @@ public class UserService {
                 .map(filmStorage::getFilm)
                 .collect(Collectors.toList());
     }
+
+    public void deleteUser(Long id) {
+        userStorage.deleteFilm(id);
+    }
 }

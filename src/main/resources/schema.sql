@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS film_directors
 ) REFERENCES films
 (
     film_id
-) ON DELETE RESTRICT,
+) ON DELETE CASCADE,
     FOREIGN KEY
 (
     director_id
@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS film_genres
 ) REFERENCES films
 (
     film_id
-) ON DELETE RESTRICT,
+) ON DELETE CASCADE,
     FOREIGN KEY
 (
     genre_id
@@ -262,7 +262,9 @@ CREATE TABLE IF NOT EXISTS friends
         NOT NULL,
         useful
         BIGINT
-        DEFAULT 0
+        DEFAULT 0,
+        FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+        FOREIGN KEY (film_id) REFERENCES films(film_id) ON DELETE CASCADE
         );
 
     CREATE TABLE IF NOT EXISTS grades_reviews
@@ -283,7 +285,9 @@ CREATE TABLE IF NOT EXISTS friends
          NOT NULL,
          review_id
          BIGINT
-         NOT NULL
+         NOT NULL,
+         FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+         FOREIGN KEY (review_id) REFERENCES reviews(review_id) ON DELETE CASCADE
          );
 
 
