@@ -84,4 +84,12 @@ public class FilmController {
                                      @RequestParam Long friendId) {
         return service.getCommonFilms(userId, friendId);
     }
+
+    @GetMapping("/search")
+    public List<Film> searchFilm(@RequestParam(required = false) String query,
+                                 @RequestParam(required = false) List<String> by) {
+        log.info("инициирован запрос на поиск фильма по параметрам {}, текст для поиска: {}", by, query);
+        return service.searchFilm(query, by);
+    }
+
 }

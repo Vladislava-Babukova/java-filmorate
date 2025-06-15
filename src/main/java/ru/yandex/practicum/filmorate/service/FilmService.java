@@ -81,4 +81,9 @@ public class FilmService {
     public void deleteFilm(Long id) {
         storage.deleteFilm(id);
     }
+
+    public List<Film> searchFilm(String query, List<String> by) {
+        return storage.searchFilm(query, by);
+    }
+
 }
