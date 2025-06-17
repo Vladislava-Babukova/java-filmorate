@@ -41,6 +41,7 @@ public class UserController {
 
     @PutMapping("/{id}/friends/{friendId}")
     public User addFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        log.info("Добавляем пользователя {} в список друзей {}", friendId, id);
         return service.addFriend(id, friendId);
     }
 
@@ -77,6 +78,7 @@ public class UserController {
         return service.getUser(id);
     }
 
+    //добавлена лента событий для пользователя
     @GetMapping("/{id}/feed")
     public List<Event> getFeedForUser(@PathVariable Long id) {
         return service.getFeedForUser(id);

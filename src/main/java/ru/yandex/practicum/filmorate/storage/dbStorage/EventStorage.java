@@ -6,5 +6,10 @@ import java.util.List;
 
 public interface EventStorage {
     void create(Event event);
+
     List<Event> getFeedForUser(Long userId);
+
+    void deleteUserEvents(Long userId);
+
+    void deleteFilmEvents(Long filmId);
 }

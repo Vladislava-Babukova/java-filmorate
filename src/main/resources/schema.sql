@@ -293,29 +293,27 @@ CREATE TABLE IF NOT EXISTS friends
 
         CREATE TABLE IF NOT EXISTS feed
         (
-            event_id
-            BIGINT
-            GENERATED
-            BY
-            DEFAULT AS
-            IDENTITY
-            PRIMARY KEY,
-            action_time
-            TIMESTAMP
-            NOT NULL,
-            user_id
-            BIGINT
-            NOT NULL,
-            event_type
-            VARCHAR(10)
-            NOT NULL,
-            operation_type
-            VARCHAR(10)
-            NOT NULL,
-            entity_id
-            BIGINT
-            NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+        event_id
+        BIGINT
+        GENERATED
+        BY
+        DEFAULT AS
+        IDENTITY
+        PRIMARY KEY,
+        action_time
+        BIGINT
+        NOT NULL,
+        user_id
+        BIGINT
+        NOT NULL,
+        event_type
+        VARCHAR(10)
+        NOT NULL,
+        operation_type
+        VARCHAR(10)
+        NOT NULL,
+        entity_id
+        BIGINT
+        NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
         );
-
-

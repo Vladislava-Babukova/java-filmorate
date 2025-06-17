@@ -11,8 +11,8 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.EventStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.UserDbStorage;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -64,7 +64,7 @@ public class UserService {
         if (user == null || friend == null) {
             throw new DataNotFoundException("Пользователь не найден");
         }
-        eventService.createEvent(OffsetDateTime.now(), id, EventType.FRIEND, OperationType.ADD,friendId);
+        eventService.createEvent(Instant.now(), id, EventType.FRIEND, OperationType.ADD,friendId);
         return userStorage.addFriend(id, friendId);
     }
 
@@ -79,6 +79,7 @@ public class UserService {
         if (user == null || friend == null) {
             throw new DataNotFoundException("Пользователь не найден");
         }
+        eventService.createEvent(Instant.now(), id, EventType.FRIEND, OperationType.REMOVE,friendId);
         user = userStorage.deleteFriend(id, friendId);
         return user;
     }
@@ -122,6 +123,7 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
+        eventService.deleteUserEvents(id);
         userStorage.deleteFilm(id);
     }
 
