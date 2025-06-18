@@ -9,7 +9,8 @@ drop table if exists
     directors,
     film_directors,
     reviews,
-    grades_reviews;
+    grades_reviews,
+    feed;
 
 
 CREATE TABLE IF NOT EXISTS ratings
@@ -290,5 +291,29 @@ CREATE TABLE IF NOT EXISTS friends
          FOREIGN KEY (review_id) REFERENCES reviews(review_id) ON DELETE CASCADE
          );
 
-
-
+        CREATE TABLE IF NOT EXISTS feed
+        (
+        event_id
+        BIGINT
+        GENERATED
+        BY
+        DEFAULT AS
+        IDENTITY
+        PRIMARY KEY,
+        action_time
+        BIGINT
+        NOT NULL,
+        user_id
+        BIGINT
+        NOT NULL,
+        event_type
+        VARCHAR(10)
+        NOT NULL,
+        operation_type
+        VARCHAR(10)
+        NOT NULL,
+        entity_id
+        BIGINT
+        NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+        );

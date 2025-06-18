@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -40,6 +41,7 @@ public class UserController {
 
     @PutMapping("/{id}/friends/{friendId}")
     public User addFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        log.info("Добавляем пользователя {} в список друзей {}", friendId, id);
         return service.addFriend(id, friendId);
     }
 
@@ -74,5 +76,11 @@ public class UserController {
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
         return service.getUser(id);
+    }
+
+    //добавлена лента событий для пользователя
+    @GetMapping("/{id}/feed")
+    public List<Event> getFeedForUser(@PathVariable Long id) {
+        return service.getFeedForUser(id);
     }
 }

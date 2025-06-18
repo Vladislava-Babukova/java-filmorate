@@ -5,12 +5,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.dbStorage.EventStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.UserDbStorage;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +24,8 @@ public class UserService {
     private final UserStorage userStorage; // <--- тк ниже появляется экз-ы FilmStorage и UserDbStorage, пришлось
     private final FilmStorage filmStorage; // поменять имя переменной storage на userStorage, чтобы отличать их (простите)
     private final UserDbStorage userDbStorage;
+    private final EventStorage eventStorage;
+    private final EventService eventService;
     private long generateId = 0;
     private final LocalDate dateNow = LocalDate.now();
 
@@ -61,7 +64,7 @@ public class UserService {
         if (user == null || friend == null) {
             throw new DataNotFoundException("Пользователь не найден");
         }
-
+        eventService.createEvent(Instant.now(), id, EventType.FRIEND, OperationType.ADD,friendId);
         return userStorage.addFriend(id, friendId);
     }
 
@@ -76,6 +79,7 @@ public class UserService {
         if (user == null || friend == null) {
             throw new DataNotFoundException("Пользователь не найден");
         }
+        eventService.createEvent(Instant.now(), id, EventType.FRIEND, OperationType.REMOVE,friendId);
         user = userStorage.deleteFriend(id, friendId);
         return user;
     }
@@ -119,6 +123,12 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
+        eventService.deleteUserEvents(id);
         userStorage.deleteFilm(id);
+    }
+
+    public List<Event> getFeedForUser(Long userId) {
+
+        return eventStorage.getFeedForUser(userId);
     }
 }

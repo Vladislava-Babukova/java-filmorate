@@ -3,9 +3,12 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.EventType;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.OperationType;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
@@ -17,6 +20,7 @@ public class FilmService {
     private static final LocalDate RELEASE_DATE = LocalDate.of(1895, Month.DECEMBER, 28);
     private final FilmStorage storage;
     private final UserService userService;
+    private final EventService eventService;
     private final long generateId = 0;
 
 
@@ -48,12 +52,13 @@ public class FilmService {
     }
 
     public Film addLike(Long filmId, Long userId) {
+        eventService.createEvent(Instant.now(),userId, EventType.LIKE, OperationType.ADD,filmId);
         return storage.addLike(filmId, userId);
     }
 
     public Film deleteLike(Long filmId, Long userId) {
+        eventService.createEvent(Instant.now(),userId, EventType.LIKE, OperationType.REMOVE,filmId);
         return storage.deleteLike(filmId, userId);
-
     }
 
     // добавлены необходимые для новой логики параметры метода
@@ -79,6 +84,7 @@ public class FilmService {
     }
 
     public void deleteFilm(Long id) {
+        eventService.deleteFilmEvents(id);
         storage.deleteFilm(id);
     }
 

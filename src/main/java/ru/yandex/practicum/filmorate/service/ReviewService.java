@@ -5,14 +5,13 @@ import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistExeption;
-import ru.yandex.practicum.filmorate.model.Grade;
-import ru.yandex.practicum.filmorate.model.GradeReview;
-import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.GradesReviewsStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.ReviewStorage;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,13 +22,15 @@ public class ReviewService {
     private final UserStorage userStorage;
     private final FilmStorage filmStorage;
     private final GradesReviewsStorage gradesReviewsStorage;
+    private final EventService eventService;
 
     @Autowired
-    public ReviewService(ReviewStorage reviewStorage, UserStorage userStorage, FilmStorage filmStorage, GradesReviewsStorage gradesReviewsStorage) {
+    public ReviewService(ReviewStorage reviewStorage, UserStorage userStorage, FilmStorage filmStorage, GradesReviewsStorage gradesReviewsStorage, EventService eventService) {
         this.reviewStorage = reviewStorage;
         this.userStorage = userStorage;
         this.filmStorage = filmStorage;
         this.gradesReviewsStorage = gradesReviewsStorage;
+        this.eventService = eventService;
     }
 
     public Review crete(@Valid Review review) {
@@ -44,11 +45,14 @@ public class ReviewService {
         }
         userStorage.getUser(review.getUserId());
         filmStorage.getFilm(review.getFilmId());
-        return reviewStorage.create(review);
+        Review result = reviewStorage.create(review);
+        eventService.createEvent(Instant.now(),result.getUserId(), EventType.REVIEW, OperationType.ADD,result.getReviewId());
+        return result;
     }
 
     public Review update(@Valid Review review) {
         reviewStorage.getReviewById(review.getReviewId());
+        eventService.createEvent(Instant.now(), review.getUserId(), EventType.REVIEW, OperationType.UPDATE, review.getReviewId());
         return reviewStorage.update(review);
     }
 
@@ -57,6 +61,7 @@ public class ReviewService {
     }
 
     public void delete(Long id) {
+        eventService.createEvent(Instant.now(), reviewStorage.getReviewById(id).getUserId(), EventType.REVIEW, OperationType.REMOVE, id);
         reviewStorage.delete(id);
     }
 
