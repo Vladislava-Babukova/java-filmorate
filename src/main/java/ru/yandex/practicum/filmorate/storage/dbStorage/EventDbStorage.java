@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.storage.dbStorage.mapping.EventRowMapper;
 
@@ -22,6 +23,12 @@ public class EventDbStorage implements EventStorage {
 
     @Override
     public void create(Event event) {
+        String checkUserSql = "SELECT COUNT(*) FROM users WHERE user_id = ?";
+        int userCount = jdbcTemplate.queryForObject(checkUserSql, Integer.class, event.getUserId());
+        if (userCount == 0) {
+            throw new DataNotFoundException("Пользователь с ID " + event.getUserId() + " не найден");
+        }
+
         String query = "INSERT INTO feed (action_time,user_id,event_type,operation_type,entity_id) VALUES (?,?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
@@ -43,7 +50,7 @@ public class EventDbStorage implements EventStorage {
 
     @Override
     public void deleteUserEvents(Long userId) {
-        String query = "DELETE FROM FEED WHERE USER_ID = ? OR (EVENT_TYPE = 'FRIEND' AND ENTITY_ID = ?";
+        String query = "DELETE FROM FEED WHERE USER_ID = ? OR (EVENT_TYPE = 'FRIEND' AND ENTITY_ID = ?)";
         jdbcTemplate.update(query, userId, userId);
     }
 
@@ -55,7 +62,7 @@ public class EventDbStorage implements EventStorage {
 
     @Override
     public List<Event> getFeedForUser(Long userId) {
-//        String query = "SELECT * FROM FEED  WHERE USER_ID IN ( SELECT friend_id FROM FRIENDS WHERE USER_ID = ?) ORDER BY EVENT_ID DESC ";
+    //   String query = "SELECT * FROM FEED  WHERE USER_ID IN ( SELECT friend_id FROM FRIENDS WHERE USER_ID = ?) ORDER BY EVENT_ID DESC ";
         String query = "SELECT * FROM FEED  WHERE USER_ID  = ?";
 
         return jdbcTemplate.query(query, eventRowMapper, userId);

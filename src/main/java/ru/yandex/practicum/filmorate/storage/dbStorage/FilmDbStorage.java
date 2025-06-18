@@ -194,7 +194,7 @@ public class FilmDbStorage implements FilmStorage {
         }
 
         if (!filmExists(film.getId())) {
-            throw new SQLException("Фильм с ID " + film.getId() + " не найден");
+            throw new DataNotFoundException("Фильм с ID " + film.getId() + " не найден");
         }
 
 
@@ -243,7 +243,12 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public List<Film> getAllFilms() {
         String query = "SELECT * FROM films";
-        return jdbcTemplate.query(query, filmRowMapper);
+        return jdbcTemplate.query(query, filmRowMapper).stream()
+                .peek(film -> {
+                    film.setGenres(addGenre(film));
+                    film.setDirectors(addDirector(film));
+                    addMpa(film);
+                }).collect(Collectors.toUnmodifiableList());
     }
 
     //в метод добавлена строчка, добавляющая в фильм режисёра
@@ -262,7 +267,6 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     // Обновлена логика в связи с добавлением доп параметров, добавлена проверка на пустой список.
-
     @Override
     public List<Film> getPopularFilms(int count, Integer genreId, Integer year) {
 
@@ -346,6 +350,11 @@ public class FilmDbStorage implements FilmStorage {
     //добавлен метод выдачи фильмов по айди режиссёра
     @Override
     public List<Film> getFilmsByDirector(Long directorId, String sortBy) {
+        String checkDirectorSql = "SELECT COUNT(*) FROM directors WHERE id = ?";
+        Integer count = jdbcTemplate.queryForObject(checkDirectorSql, Integer.class, directorId);
+        if (count == 0) {
+            throw new DataNotFoundException("Режиссёр с ID " + directorId + " не найден");
+        }
 
         String queryLike = "SELECT f.* " +
                 "FROM films AS f " +
@@ -373,6 +382,7 @@ public class FilmDbStorage implements FilmStorage {
                 .peek(film -> {
                     film.setDirectors(addDirector(film));
                     film.setGenres(addGenre(film));
+                    addMpa(film);
                 })
                 .collect(Collectors.toUnmodifiableList());
         return filmByDirectors;
