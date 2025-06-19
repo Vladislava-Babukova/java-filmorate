@@ -1,32 +1,44 @@
-INSERT INTO ratings (rating_name)
-SELECT 'G' WHERE NOT EXISTS (SELECT 1 FROM ratings WHERE rating_name = 'G');
 
 INSERT INTO ratings (rating_name)
-SELECT 'PG' WHERE NOT EXISTS (SELECT 1 FROM ratings WHERE rating_name = 'PG');
+SELECT 'G'
+WHERE NOT EXISTS (SELECT 1 FROM ratings WHERE rating_name = 'G');
 
 INSERT INTO ratings (rating_name)
-SELECT 'PG-13' WHERE NOT EXISTS (SELECT 1 FROM ratings WHERE rating_name = 'PG-13');
+SELECT 'PG'
+WHERE NOT EXISTS (SELECT 1 FROM ratings WHERE rating_name = 'PG');
 
 INSERT INTO ratings (rating_name)
-SELECT 'R' WHERE NOT EXISTS (SELECT 1 FROM ratings WHERE rating_name = 'R');
+SELECT 'PG-13'
+WHERE NOT EXISTS (SELECT 1 FROM ratings WHERE rating_name = 'PG-13');
 
 INSERT INTO ratings (rating_name)
-SELECT 'NC-17' WHERE NOT EXISTS (SELECT 1 FROM ratings WHERE rating_name = 'NC-17');
+SELECT 'R'
+WHERE NOT EXISTS (SELECT 1 FROM ratings WHERE rating_name = 'R');
+
+INSERT INTO ratings (rating_name)
+SELECT 'NC-17'
+WHERE NOT EXISTS (SELECT 1 FROM ratings WHERE rating_name = 'NC-17');
 
 INSERT INTO genres (name)
-SELECT 'Комедия' WHERE NOT EXISTS (SELECT 1 FROM genres WHERE name = 'Комедия');
+SELECT 'Комедия'
+WHERE NOT EXISTS (SELECT 1 FROM genres WHERE name = 'Комедия');
 
 INSERT INTO genres (name)
-SELECT 'Драма' WHERE NOT EXISTS (SELECT 1 FROM genres WHERE name = 'Драма');
+SELECT 'Драма'
+WHERE NOT EXISTS (SELECT 1 FROM genres WHERE name = 'Драма');
 
 INSERT INTO genres (name)
-SELECT 'Мультфильм' WHERE NOT EXISTS (SELECT 1 FROM genres WHERE name = 'Мультфильм');
+SELECT 'Мультфильм'
+WHERE NOT EXISTS (SELECT 1 FROM genres WHERE name = 'Мультфильм');
 
 INSERT INTO genres (name)
-SELECT 'Триллер' WHERE NOT EXISTS (SELECT 1 FROM genres WHERE name = 'Триллер');
+SELECT 'Триллер'
+WHERE NOT EXISTS (SELECT 1 FROM genres WHERE name = 'Триллер');
 
 INSERT INTO genres (name)
-SELECT 'Документальный' WHERE NOT EXISTS (SELECT 1 FROM genres WHERE name = 'Документальный');
+SELECT 'Документальный'
+WHERE NOT EXISTS (SELECT 1 FROM genres WHERE name = 'Документальный');
 
 INSERT INTO genres (name)
-SELECT 'Боевик' WHERE NOT EXISTS (SELECT 1 FROM genres WHERE name = 'Боевик');
+SELECT 'Боевик'
+WHERE NOT EXISTS (SELECT 1 FROM genres WHERE name = 'Боевик');
