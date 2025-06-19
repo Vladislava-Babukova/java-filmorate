@@ -17,7 +17,6 @@ import ru.yandex.practicum.filmorate.storage.dbStorage.mapping.MpaRowMapper;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -461,6 +460,12 @@ public class FilmDbStorage implements FilmStorage {
             addMpa(f);
         }
         return films;
+    }
+
+    @Override
+    public List<Long> getLikesByFilm(Long filmId) {
+        String query = "SELECT user_id FROM likes WHERE film_id = ?;";
+        return jdbcTemplate.queryForList(query, Long.class, filmId);
     }
 
 }

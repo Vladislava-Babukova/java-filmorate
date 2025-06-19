@@ -5,6 +5,7 @@ import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistExeption;
+import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -46,7 +47,7 @@ public class ReviewService {
         userStorage.getUser(review.getUserId());
         filmStorage.getFilm(review.getFilmId());
         Review result = reviewStorage.create(review);
-        eventService.createEvent(Instant.now(),result.getUserId(), EventType.REVIEW, OperationType.ADD,result.getReviewId());
+        eventService.createEvent(Instant.now(), result.getUserId(), EventType.REVIEW, OperationType.ADD, result.getReviewId());
         return result;
     }
 

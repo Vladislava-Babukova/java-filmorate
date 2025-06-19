@@ -35,4 +35,6 @@ public interface FilmStorage {
     void deleteFilm(Long id);
 
     List<Film> searchFilm(String query, List<String> by);
+
+    List<Long> getLikesByFilm(Long filmId);
 }

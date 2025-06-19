@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -52,13 +53,29 @@ public class FilmService {
     }
 
     public Film addLike(Long filmId, Long userId) {
-        eventService.createEvent(Instant.now(),userId, EventType.LIKE, OperationType.ADD,filmId);
-        return storage.addLike(filmId, userId);
+//        if (!film.getLikeSet().isEmpty()) {
+//            eventService.createEvent(Instant.now(), userId, EventType.LIKE, OperationType.ADD, filmId);
+//        }
+        List<Long> likes = storage.getLikesByFilm(filmId);
+        long countLikes = likes.size();
+        Film film = storage.addLike(filmId, userId);
+//        if (storage.getLikesByFilm(filmId).size() == countLikes + 1){
+            eventService.createEvent(Instant.now(), userId, EventType.LIKE, OperationType.ADD, filmId);
+//        }
+//        for (Long l : likes){
+//            if (Objects.equals(l, filmId)) {
+//                eventService.createEvent(Instant.now(), userId, EventType.LIKE, OperationType.ADD, filmId);
+//            }
+//        }
+        return film;
     }
 
     public Film deleteLike(Long filmId, Long userId) {
-        eventService.createEvent(Instant.now(),userId, EventType.LIKE, OperationType.REMOVE,filmId);
-        return storage.deleteLike(filmId, userId);
+        Film film = storage.deleteLike(filmId, userId);
+//        if (film.getLikeSet().isEmpty()) {
+            eventService.createEvent(Instant.now(), userId, EventType.LIKE, OperationType.REMOVE, filmId);
+//        }
+        return film;
     }
 
     // добавлены необходимые для новой логики параметры метода
@@ -84,7 +101,7 @@ public class FilmService {
     }
 
     public void deleteFilm(Long id) {
-        eventService.deleteFilmEvents(id);
+//        eventService.deleteFilmEvents(id);
         storage.deleteFilm(id);
     }
 
