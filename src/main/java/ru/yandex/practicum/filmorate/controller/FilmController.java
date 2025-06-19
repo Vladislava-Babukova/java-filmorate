@@ -39,9 +39,9 @@ public class FilmController {
         return service.topFilms(count);
     }
 
-    @PutMapping("/{filmId}/like/{userId}")
-    public Film addLike(@PathVariable Long filmId, @PathVariable Long userId) {
-        return service.addLike(filmId, userId);
+    @PutMapping("/{id}/like/{userId}")
+    public Film addLike(@PathVariable Long id, @PathVariable Long userId) {
+        return service.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
@@ -49,9 +49,5 @@ public class FilmController {
         return service.deleteLike(id, userId);
     }
 
-    @GetMapping("/{id}")
-    public Film getFilm(@PathVariable Long id) {
-        return service.getFilm(id);
-    }
 
 }
