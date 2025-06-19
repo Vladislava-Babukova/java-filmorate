@@ -64,7 +64,7 @@ public class UserService {
         if (user == null || friend == null) {
             throw new DataNotFoundException("Пользователь не найден");
         }
-        eventService.createEvent(Instant.now(), id, EventType.FRIEND, OperationType.ADD,friendId);
+        eventService.createEvent(Instant.now(), id, EventType.FRIEND, OperationType.ADD, friendId);
         return userStorage.addFriend(id, friendId);
     }
 
@@ -79,8 +79,8 @@ public class UserService {
         if (user == null || friend == null) {
             throw new DataNotFoundException("Пользователь не найден");
         }
-        eventService.createEvent(Instant.now(), id, EventType.FRIEND, OperationType.REMOVE,friendId);
         user = userStorage.deleteFriend(id, friendId);
+        eventService.createEvent(Instant.now(), id, EventType.FRIEND, OperationType.REMOVE, friendId);
         return user;
     }
 
@@ -123,7 +123,6 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        eventService.deleteUserEvents(id);
         userStorage.deleteFilm(id);
     }
 

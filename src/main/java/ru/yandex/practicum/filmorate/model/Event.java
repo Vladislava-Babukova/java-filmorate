@@ -26,7 +26,7 @@ public class Event {
     private EventType eventType;
     @NotNull
     private OperationType operation;
-    private Long id;
+    private Long eventId;
     @NotNull
     @Positive
     private Long entityId;

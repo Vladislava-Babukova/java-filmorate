@@ -52,13 +52,14 @@ public class FilmService {
     }
 
     public Film addLike(Long filmId, Long userId) {
-        eventService.createEvent(Instant.now(),userId, EventType.LIKE, OperationType.ADD,filmId);
+        eventService.createEvent(Instant.now(), userId, EventType.LIKE, OperationType.ADD, filmId);
         return storage.addLike(filmId, userId);
     }
 
     public Film deleteLike(Long filmId, Long userId) {
-        eventService.createEvent(Instant.now(),userId, EventType.LIKE, OperationType.REMOVE,filmId);
-        return storage.deleteLike(filmId, userId);
+        Film film = storage.deleteLike(filmId, userId);
+        eventService.createEvent(Instant.now(), userId, EventType.LIKE, OperationType.REMOVE, filmId);
+        return film;
     }
 
     // добавлены необходимые для новой логики параметры метода
@@ -84,7 +85,6 @@ public class FilmService {
     }
 
     public void deleteFilm(Long id) {
-        eventService.deleteFilmEvents(id);
         storage.deleteFilm(id);
     }
 

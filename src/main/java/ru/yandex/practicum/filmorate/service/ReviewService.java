@@ -46,13 +46,13 @@ public class ReviewService {
         userStorage.getUser(review.getUserId());
         filmStorage.getFilm(review.getFilmId());
         Review result = reviewStorage.create(review);
-        eventService.createEvent(Instant.now(),result.getUserId(), EventType.REVIEW, OperationType.ADD,result.getReviewId());
+        eventService.createEvent(Instant.now(), result.getUserId(), EventType.REVIEW, OperationType.ADD, result.getReviewId());
         return result;
     }
 
     public Review update(@Valid Review review) {
-        reviewStorage.getReviewById(review.getReviewId());
-        eventService.createEvent(Instant.now(), review.getUserId(), EventType.REVIEW, OperationType.UPDATE, review.getReviewId());
+        Review olrReview = reviewStorage.getReviewById(review.getReviewId());
+        eventService.createEvent(Instant.now(), olrReview.getUserId(), EventType.REVIEW, OperationType.UPDATE, review.getReviewId());
         return reviewStorage.update(review);
     }
 

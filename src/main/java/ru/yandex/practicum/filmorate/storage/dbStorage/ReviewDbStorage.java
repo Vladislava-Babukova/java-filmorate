@@ -53,13 +53,13 @@ public class ReviewDbStorage implements ReviewStorage {
 
         String query = "UPDATE reviews SET " +
                 "content = ?," +
-                "is_positive = ?," +
-                "useful = ?" +
+                "is_positive = ?" +
+//                "useful = ?" +
                 "WHERE review_id = ?";
         jdbcTemplate.update(query,
                 review.getContent(),
                 review.getIsPositive(),
-                review.getUseful(),
+//                review.getUseful(),
                 review.getReviewId());
         return getReviewById(review.getReviewId());
     }
@@ -85,13 +85,13 @@ public class ReviewDbStorage implements ReviewStorage {
 
     @Override
     public List<Review> getAllReviews(Long count) {
-        String query = "SELECT * FROM reviews LIMIT ?;";
-        return jdbcTemplate.query(query, reviewRowMapper, count);
+        String query = "SELECT * FROM reviews ORDER BY useful DESC;";
+        return jdbcTemplate.query(query, reviewRowMapper);
     }
 
     @Override
     public List<Review> getReviewsByFilm(Long filmId, Long count) {
-        String query = "SELECT * FROM reviews WHERE film_id = ? LIMIT ?";
+        String query = "SELECT * FROM reviews WHERE film_id = ? ORDER BY useful DESC LIMIT ?";
         return jdbcTemplate.query(query, reviewRowMapper, filmId, count);
     }
 }
