@@ -5,19 +5,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.model.*;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.dbStorage.EventStorage;
+import ru.yandex.practicum.filmorate.storage.dbStorage.UserDbStorage;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private final UserStorage userStorage; // <--- тк ниже появляется экз-ы FilmStorage и UserDbStorage, пришлось
+    private final FilmStorage filmStorage; // поменять имя переменной storage на userStorage, чтобы отличать их (простите)
+    private final UserDbStorage userDbStorage;
+    private final EventStorage eventStorage;
+    private final EventService eventService;
     private long generateId = 0;
-    private LocalDate dateNow = LocalDate.now();
-    private final InMemoryUserStorage storage;
+    private final LocalDate dateNow = LocalDate.now();
 
     public void checkBirthday(User user) {
         if (user.getBirthday().isAfter(dateNow)) {
@@ -35,64 +45,89 @@ public class UserService {
         checkBirthday(user);
         nameCreate(user);
         user.setId(++generateId);
-        return storage.create(user);
+        return userStorage.create(user);
     }
 
     public User update(User user) {
         checkBirthday(user);
         nameCreate(user);
-        return storage.update(user);
-
+        return userStorage.update(user);
     }
 
     public List<User> getAllUsers() {
-        return storage.getAllUsers();
+        return userStorage.getAllUsers();
     }
 
     public User addFriend(Long id, Long friendId) {
-        User user = storage.getUser(id);
-        User friend = storage.getUser(friendId);
+        User user = userStorage.getUser(id);
+        User friend = userStorage.getUser(friendId);
         if (user == null || friend == null) {
             throw new DataNotFoundException("Пользователь не найден");
         }
-        Set<Long> list = user.getFrendSet();
-        Set<Long> listFriend = friend.getFrendSet();
-        list.add(friendId);
-        listFriend.add(id);
-        user.setFrendSet(list);
-        friend.setFrendSet(listFriend);
-        storage.update(user);
-        storage.update(friend);
-        return user;
+        eventService.createEvent(Instant.now(), id, EventType.FRIEND, OperationType.ADD, friendId);
+        return userStorage.addFriend(id, friendId);
+    }
+
+    public Set<User> getFriends(Long userId) {
+
+        return userStorage.getFriends(userId);
     }
 
     public User deleteFriend(Long id, Long friendId) {
-        User user = storage.getUser(id);
-        User friend = storage.getUser(friendId);
+        User user = userStorage.getUser(id);
+        User friend = userStorage.getUser(friendId);
         if (user == null || friend == null) {
             throw new DataNotFoundException("Пользователь не найден");
         }
-        Set<Long> list = user.getFrendSet();
-        Set<Long> listFriend = friend.getFrendSet();
-        list.remove(friendId);
-        listFriend.remove(id);
-        user.setFrendSet(list);
-        friend.setFrendSet(listFriend);
-        storage.update(user);
-        storage.update(friend);
+        user = userStorage.deleteFriend(id, friendId);
+        eventService.createEvent(Instant.now(), id, EventType.FRIEND, OperationType.REMOVE, friendId);
         return user;
     }
 
-    public List<User> mutualFriends(Long id, Long otherId) {
-        return storage.mutualFriends(id, otherId);
+    public Set<User> mutualFriends(Long id, Long otherId) {
+        return userStorage.getCommonFriends(id, otherId);
     }
-
-    public List<User> getUsersFriends(Long id) {
-        return storage.getUsersFriends(id);
-    }
-
 
     public User getUser(Long userId) {
-        return storage.getUser(userId);
+        return userStorage.getUser(userId);
+    }
+
+    public List<Film> getRecommendations(Long userId) {
+        // 1. Проверяем существование пользователя
+        if (!userDbStorage.checkId(userId)) {
+            throw new DataNotFoundException("Пользователь с ID " + userId + " не найден");
+        }
+
+        // 2. Находим пользователей с похожими вкусами
+        List<Long> similarUsers = userStorage.findUsersWithSimilarTastes(userId);
+        if (similarUsers.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Long mostSimilarUserId = similarUsers.getFirst();
+
+        // 3. Получаем фильмы, которые лайкнул похожий пользователь
+        List<Long> similarUserLikedFilms = userStorage.getFilmsLikedByUser(mostSimilarUserId);
+
+        // 4. Получаем фильмы, которые лайкнул текущий пользователь
+        List<Long> currentUserLikedFilms = userStorage.getFilmsLikedByUser(userId);
+
+        // 5. Исключаем уже просмотренные фильмы
+        List<Long> recommendedFilmIds = similarUserLikedFilms.stream()
+                .filter(filmId -> !currentUserLikedFilms.contains(filmId))
+                .toList();
+
+        // 6. Получаем полные данные о фильмах
+        return recommendedFilmIds.stream()
+                .map(filmStorage::getFilm)
+                .collect(Collectors.toList());
+    }
+
+    public void deleteUser(Long id) {
+        userStorage.deleteFilm(id);
+    }
+
+    public List<Event> getFeedForUser(Long userId) {
+
+        return eventStorage.getFeedForUser(userId);
     }
 }
