@@ -14,7 +14,9 @@ public interface FilmStorage {
 
     Film getFilm(Long filmId);
 
-    List<Film> topFilms(int count);
+    // Изменен метод по получению популярных фильмов
+
+    List<Film> getPopularFilms(int count, Integer genreId, Integer year);
 
     void saveGenre(Film film);
 
@@ -26,4 +28,13 @@ public interface FilmStorage {
 
     Film deleteLike(Long filmId, Long userId);
 
+    List<Film> getFilmsByDirector(Long directorId, String sortBy);
+
+    List<Film> getCommonFilms(Long userId, Long friendId);
+
+    void deleteFilm(Long id);
+
+    List<Film> searchFilm(String query, List<String> by);
+
+    List<Long> getLikesByFilm(Long filmId);
 }

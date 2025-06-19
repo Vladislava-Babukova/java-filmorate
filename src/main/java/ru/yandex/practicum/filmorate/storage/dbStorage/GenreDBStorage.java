@@ -12,9 +12,9 @@ import java.util.List;
 
 @Repository
 public class GenreDBStorage implements GenreStorage {
+    private final GenreRowMapper genreRowMapper;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private final GenreRowMapper genreRowMapper;
 
     public GenreDBStorage(GenreRowMapper genreRowMapper) {
         this.genreRowMapper = genreRowMapper;

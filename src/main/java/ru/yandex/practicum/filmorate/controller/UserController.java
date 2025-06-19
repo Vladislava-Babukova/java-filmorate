@@ -3,7 +3,11 @@ package ru.yandex.practicum.filmorate.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Event;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -37,6 +41,7 @@ public class UserController {
 
     @PutMapping("/{id}/friends/{friendId}")
     public User addFriend(@PathVariable Long id, @PathVariable Long friendId) {
+        log.info("Добавляем пользователя {} в список друзей {}", friendId, id);
         return service.addFriend(id, friendId);
     }
 
@@ -55,4 +60,27 @@ public class UserController {
         return service.mutualFriends(id, otherId);
     }
 
+    @GetMapping("/{id}/recommendations")
+    public List<Film> getRecommendations(@PathVariable Long id) {
+        return service.getRecommendations(id);
+    }
+
+    //добавлено удаление пользователя
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        service.deleteUser(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    //добавлена выдача пользователя по айди
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        return service.getUser(id);
+    }
+
+    //добавлена лента событий для пользователя
+    @GetMapping("/{id}/feed")
+    public List<Event> getFeedForUser(@PathVariable Long id) {
+        return service.getFeedForUser(id);
+    }
 }
