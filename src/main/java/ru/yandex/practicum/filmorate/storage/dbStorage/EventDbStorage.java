@@ -68,7 +68,6 @@ public class EventDbStorage implements EventStorage {
     @Override
     public List<Event> getFeedForUser(Long userId) {
         checkUser(userId);
-        //   String query = "SELECT * FROM FEED  WHERE USER_ID IN ( SELECT friend_id FROM FRIENDS WHERE USER_ID = ?) ORDER BY EVENT_ID DESC ";
         String query = "SELECT * FROM feed  WHERE USER_ID  = ?;";
         return jdbcTemplate.query(query, eventRowMapper, userId);
     }
