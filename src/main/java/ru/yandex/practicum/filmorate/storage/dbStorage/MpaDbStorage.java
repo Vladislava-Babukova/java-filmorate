@@ -12,9 +12,9 @@ import java.util.List;
 
 @Repository
 public class MpaDbStorage implements MpaStorage {
-    private final MpaRowMapper mpaRowMapper;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    private final MpaRowMapper mpaRowMapper;
 
     public MpaDbStorage(MpaRowMapper mpaRowMapper) {
         this.mpaRowMapper = mpaRowMapper;

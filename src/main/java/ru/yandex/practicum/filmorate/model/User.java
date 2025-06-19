@@ -16,12 +16,12 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-    String name;
     private long id;
     @Email
     private String email;
     @NotBlank
     private String login;
+    String name;
     private LocalDate birthday;
     private Set<User> frendSet = new HashSet<>();
 }
