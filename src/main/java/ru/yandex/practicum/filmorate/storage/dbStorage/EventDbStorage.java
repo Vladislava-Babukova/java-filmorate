@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dbStorage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -31,7 +30,7 @@ public class EventDbStorage implements EventStorage {
 
     @Override
     public void create(Event event) {
-       // checkUser(event.getUserId());
+        checkUser(event.getUserId());
 
         String query = "INSERT INTO feed (action_time,user_id,event_type,operation_type,entity_id) VALUES (?,?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -71,8 +70,6 @@ public class EventDbStorage implements EventStorage {
         checkUser(userId);
         //   String query = "SELECT * FROM FEED  WHERE USER_ID IN ( SELECT friend_id FROM FRIENDS WHERE USER_ID = ?) ORDER BY EVENT_ID DESC ";
         String query = "SELECT * FROM feed  WHERE USER_ID  = ?;";
-
-        List<Event> events = jdbcTemplate.query(query, eventRowMapper, userId);
-        return events;
+        return jdbcTemplate.query(query, eventRowMapper, userId);
     }
 }

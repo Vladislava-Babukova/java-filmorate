@@ -64,11 +64,7 @@ public class UserService {
         if (user == null || friend == null) {
             throw new DataNotFoundException("Пользователь не найден");
         }
-        long countFriend = user.getFrendSet().size();
-        User result = userStorage.addFriend(id, friendId);
-//        if (result.getFrendSet().size() == countFriend + 1) {
-            eventService.createEvent(Instant.now(), id, EventType.FRIEND, OperationType.ADD, friendId);
-//        }
+        eventService.createEvent(Instant.now(), id, EventType.FRIEND, OperationType.ADD, friendId);
         return userStorage.addFriend(id, friendId);
     }
 
@@ -83,11 +79,8 @@ public class UserService {
         if (user == null || friend == null) {
             throw new DataNotFoundException("Пользователь не найден");
         }
-        long countFriend = user.getFrendSet().size();
         user = userStorage.deleteFriend(id, friendId);
-//        if (user.getFrendSet().size() == countFriend - 1) {
-            eventService.createEvent(Instant.now(), id, EventType.FRIEND, OperationType.REMOVE, friendId);
-//        }
+        eventService.createEvent(Instant.now(), id, EventType.FRIEND, OperationType.REMOVE, friendId);
         return user;
     }
 
@@ -130,7 +123,6 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-//        eventService.deleteUserEvents(id);
         userStorage.deleteFilm(id);
     }
 
