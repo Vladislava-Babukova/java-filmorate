@@ -12,4 +12,5 @@ public interface EventStorage {
     void deleteUserEvents(Long userId);
 
     void deleteFilmEvents(Long filmId);
+
 }

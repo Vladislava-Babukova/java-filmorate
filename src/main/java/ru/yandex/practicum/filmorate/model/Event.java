@@ -30,4 +30,5 @@ public class Event {
     @NotNull
     @Positive
     private Long entityId;
+
 }

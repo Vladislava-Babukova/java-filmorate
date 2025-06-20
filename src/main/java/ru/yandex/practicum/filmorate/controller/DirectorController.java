@@ -18,6 +18,7 @@ public class DirectorController {
     @Autowired
     private DirectorService service;
 
+
     @PostMapping
     public Director create(@Valid @RequestBody Director director) {
         log.info("Начато создание Режисёра.Получен объект{}", director);

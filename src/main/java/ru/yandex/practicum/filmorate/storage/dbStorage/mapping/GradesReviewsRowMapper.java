@@ -18,4 +18,5 @@ public class GradesReviewsRowMapper implements RowMapper<GradeReview> {
         gradeReview.setReviewId(rs.getLong("review_id"));
         return gradeReview;
     }
+
 }

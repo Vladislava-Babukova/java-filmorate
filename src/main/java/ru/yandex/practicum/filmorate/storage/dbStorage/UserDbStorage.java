@@ -20,6 +20,7 @@ import java.util.Set;
 @Repository
 public class UserDbStorage implements UserStorage {
 
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired

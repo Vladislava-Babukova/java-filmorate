@@ -44,6 +44,7 @@ class GenreControllerTest {
                 .build();
     }
 
+
     @Test
     void whenGetAllGenres() throws Exception {
         List<Genre> genres = List.of(testGenre);

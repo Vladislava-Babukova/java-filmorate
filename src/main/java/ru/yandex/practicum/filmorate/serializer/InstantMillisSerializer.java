@@ -12,4 +12,5 @@ public class InstantMillisSerializer extends JsonSerializer<Instant> {
     public void serialize(Instant value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeNumber(value.toEpochMilli());
     }
+
 }

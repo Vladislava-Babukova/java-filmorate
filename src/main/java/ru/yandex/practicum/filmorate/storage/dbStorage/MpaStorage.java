@@ -10,3 +10,4 @@ public interface MpaStorage {
 
     Mpa getMpa(Long id);
 }
+

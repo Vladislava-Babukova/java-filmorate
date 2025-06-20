@@ -61,6 +61,7 @@ class UserControllerTest {
                 .build();
     }
 
+
     @Test
     void whenCreateUser() throws Exception {
         when(userService.create(any(User.class))).thenReturn(testUser);

@@ -23,4 +23,5 @@ public class EventRowMapper implements RowMapper<Event> {
         event.setEntityId(rs.getLong("entity_id"));
         return event;
     }
+
 }

@@ -14,4 +14,5 @@ public interface GradesReviewsStorage {
     Review deleteDislike(Long id, Long userId);
 
     List<GradeReview> getGradesByReview(Long id);
+
 }

@@ -11,4 +11,5 @@ public class GradeReview {
     private Long userId;
     private Grade grade;
     private Long reviewId;
+
 }

@@ -17,4 +17,5 @@ public interface ReviewStorage {
     List<Review> getAllReviews(Long count);
 
     List<Review> getReviewsByFilm(Long filmId, Long count);
+
 }

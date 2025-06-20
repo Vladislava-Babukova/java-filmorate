@@ -16,6 +16,7 @@ import java.util.List;
 
 @Repository
 public class ReviewDbStorage implements ReviewStorage {
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired

@@ -17,6 +17,7 @@ import java.util.List;
 
 @Repository
 public class GradesReviewsDbStorage implements GradesReviewsStorage {
+
     private final ReviewStorage reviewStorage;
     private final JdbcTemplate jdbcTemplate;
     private final GradesReviewsRowMapper gradesReviewsRowMapper;

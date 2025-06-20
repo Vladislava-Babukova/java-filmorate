@@ -19,4 +19,5 @@ public class MpaService {
     public Mpa getMpa(Long id) {
         return storage.getMpa(id);
     }
+
 }

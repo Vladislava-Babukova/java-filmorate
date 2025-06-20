@@ -33,6 +33,7 @@ public class ReviewService {
         this.eventService = eventService;
     }
 
+
     public Review crete(@Valid Review review) {
         if (review.getUseful() == null) {
             review.setUseful(0L);

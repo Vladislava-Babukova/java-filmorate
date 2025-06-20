@@ -20,4 +20,5 @@ public class ReviewRowMapper implements RowMapper<Review> {
         review.setUseful(rs.getLong("useful"));
         return review;
     }
+
 }

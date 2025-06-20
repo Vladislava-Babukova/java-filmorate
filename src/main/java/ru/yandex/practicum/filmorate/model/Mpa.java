@@ -14,4 +14,5 @@ public class Mpa {
     private Long id;
     @NotBlank
     private String name;
+
 }

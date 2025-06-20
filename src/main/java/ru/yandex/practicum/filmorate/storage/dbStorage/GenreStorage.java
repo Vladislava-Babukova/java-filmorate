@@ -9,4 +9,5 @@ public interface GenreStorage {
     List<Genre> getAllGenres();
 
     Genre getGenre(Long genreId);
+
 }

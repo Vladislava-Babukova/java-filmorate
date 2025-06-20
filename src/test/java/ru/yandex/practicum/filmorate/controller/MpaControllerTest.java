@@ -32,6 +32,7 @@ class MpaControllerTest {
     @MockBean
     private MpaService mpaService;
 
+
     @Test
     void whenGetAllMpa() throws Exception {
         List<Mpa> mpaList = List.of(TEST_MPA);

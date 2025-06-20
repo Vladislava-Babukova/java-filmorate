@@ -14,7 +14,6 @@ import java.util.List;
 
 @Repository
 public class EventDbStorage implements EventStorage {
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired

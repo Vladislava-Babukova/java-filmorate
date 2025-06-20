@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import java.util.List;
 
 public interface FilmStorage {
+
     Film create(Film film);
 
     Film update(Film film);

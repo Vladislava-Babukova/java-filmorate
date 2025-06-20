@@ -19,7 +19,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
-
     private final UserService service;
 
     @PostMapping

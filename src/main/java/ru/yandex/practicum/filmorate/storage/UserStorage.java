@@ -27,4 +27,5 @@ public interface UserStorage {
     List<Long> getFilmsLikedByUser(Long userId);
 
     void deleteFilm(Long id);
+
 }

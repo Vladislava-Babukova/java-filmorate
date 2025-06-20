@@ -24,6 +24,7 @@ public class DirectorDbStorage implements DirectorStorage {
     @Autowired
     private FilmStorage filmStorage;
 
+
     @Override
     public Director create(Director director) {
         String query = "INSERT INTO directors (name) VALUES (?)";

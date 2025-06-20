@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserStorage userStorage; // <--- тк ниже появляется экз-ы FilmStorage и UserDbStorage, пришлось
     private final FilmStorage filmStorage; // поменять имя переменной storage на userStorage, чтобы отличать их (простите)
     private final UserDbStorage userDbStorage;

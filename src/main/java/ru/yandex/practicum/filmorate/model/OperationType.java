@@ -4,4 +4,5 @@ public enum OperationType {
     REMOVE,
     ADD,
     UPDATE
+
 }
