@@ -23,6 +23,7 @@ public class EventService {
         event.setEntityId(entityId);
         eventStorage.create(event);
     }
+
     public void deleteUserEvents(Long userId) {
         eventStorage.deleteUserEvents(userId);
     }

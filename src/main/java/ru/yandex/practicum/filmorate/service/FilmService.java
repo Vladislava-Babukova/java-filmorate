@@ -24,7 +24,6 @@ public class FilmService {
     private final long generateId = 0;
 
 
-
     public Film create(Film film) {
         checkDate(film);
         return storage.create(film);
