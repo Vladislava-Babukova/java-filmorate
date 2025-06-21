@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.mapping.UserRowMapper;
@@ -46,7 +47,7 @@ public class UserDbStorage implements UserStorage {
         Long id = keyHolder.getKey() != null ? keyHolder.getKey().longValue() : null;
 
         if (id == null) {
-            throw new RuntimeException("Не удалось получить ID пользователя после вставки");
+            throw new DataNotFoundException("Не удалось получить ID пользователя после вставки");
         }
         return user;
     }
@@ -54,7 +55,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User update(User user) {
         if (user == null) {
-            throw new IllegalArgumentException("user не может быть null");
+            throw new ValidationException("user не может быть null");
         }
         String checkIdQuery = "SELECT COUNT(*) FROM users WHERE user_id = ?";
         Integer idCount = jdbcTemplate.queryForObject(checkIdQuery, Integer.class, user.getId());
@@ -68,15 +69,13 @@ public class UserDbStorage implements UserStorage {
                 "email = ?, " +
                 "birthday = ? " +
                 "WHERE user_id = ?";
-        jdbcTemplate.update(con -> {
-            PreparedStatement stmt = con.prepareStatement(query, new String[]{"user_id"});
-            stmt.setLong(5, user.getId());
-            stmt.setString(1, user.getName());
-            stmt.setString(2, user.getLogin());
-            stmt.setDate(4, Date.valueOf(user.getBirthday()));
-            stmt.setString(3, user.getEmail());
-            return stmt;
-        });
+
+        jdbcTemplate.update(query,
+                user.getName(),
+                user.getLogin(),
+                user.getEmail(),
+                user.getBirthday(),
+                user.getId());
         return user;
     }
 

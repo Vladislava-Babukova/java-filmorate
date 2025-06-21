@@ -46,7 +46,7 @@ public class EventDbStorage implements EventStorage {
         Long id = keyHolder.getKey() != null ? keyHolder.getKey().longValue() : null;
 
         if (id == null) {
-            throw new RuntimeException("Не удалось получить ID события после вставки");
+            throw new DataNotFoundException("Не удалось получить ID события после вставки");
         }
         event.setEventId(id);
     }

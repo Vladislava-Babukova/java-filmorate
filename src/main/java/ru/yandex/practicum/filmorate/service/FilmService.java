@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.EventType;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -13,6 +15,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FilmService {
@@ -25,6 +28,7 @@ public class FilmService {
 
 
     public Film create(Film film) {
+        log.info("Начато создание фильма.Получен объект{}", film.getName());
         checkDate(film);
         return storage.create(film);
     }
@@ -43,6 +47,7 @@ public class FilmService {
     }
 
     public Film update(Film film) {
+        log.info("Начато обновление фильма.Получен объект{}", film.getName());
         checkDate(film);
         return storage.update(film);
     }
@@ -77,6 +82,9 @@ public class FilmService {
 
     //добавлена функция выдачи списка фильмов режисёра по его айди
     public List<Film> getFilmsByDirector(Long directorId, String sortBy) {
+        if (!sortBy.equals("year") && !sortBy.equals("likes")) {
+            throw new DataNotFoundException("Параметр sortBy должен быть 'year' или 'likes'");
+        }
         return storage.getFilmsByDirector(directorId, sortBy);
     }
 
@@ -89,6 +97,7 @@ public class FilmService {
     }
 
     public List<Film> searchFilm(String query, List<String> by) {
+        log.info("инициирован запрос на поиск фильма по параметрам {}, текст для поиска: {}", by, query);
         return storage.searchFilm(query, by);
     }
 

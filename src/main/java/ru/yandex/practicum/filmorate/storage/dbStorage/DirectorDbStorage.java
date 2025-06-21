@@ -38,7 +38,7 @@ public class DirectorDbStorage implements DirectorStorage {
         Long id = keyHolder.getKey() != null ? keyHolder.getKey().longValue() : null;
 
         if (id == null) {
-            throw new RuntimeException("Не удалось получить ID режисёра после вставки");
+            throw new DataNotFoundException("Не удалось получить ID режисёра после вставки");
         }
         director.setId(id);
         return director;

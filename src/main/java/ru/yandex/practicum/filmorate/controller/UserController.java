@@ -2,9 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -14,7 +12,7 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import java.util.List;
 import java.util.Set;
 
-@Slf4j
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -23,13 +21,11 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
-        log.info("Начато создание пользователя.Получен объект{}", user);
         return service.create(user);
     }
 
     @PutMapping
     public User update(@Valid @RequestBody User user) {
-        log.info("Начато обновление Пользователя.Получен объект{}", user);
         return service.update(user);
     }
 
@@ -40,7 +36,6 @@ public class UserController {
 
     @PutMapping("/{id}/friends/{friendId}")
     public User addFriend(@PathVariable Long id, @PathVariable Long friendId) {
-        log.info("Добавляем пользователя {} в список друзей {}", friendId, id);
         return service.addFriend(id, friendId);
     }
 
@@ -66,9 +61,9 @@ public class UserController {
 
     //добавлено удаление пользователя
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable Long id) {
         service.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     //добавлена выдача пользователя по айди

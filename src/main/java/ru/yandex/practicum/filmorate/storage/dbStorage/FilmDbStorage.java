@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.dbStorage.mapping.DirectorRowMapper;
@@ -42,10 +43,10 @@ public class FilmDbStorage implements FilmStorage {
     //метод изменён, добавлен режисёр
     public Film create(Film film) {
         if (film == null) {
-            throw new IllegalArgumentException("Film не может быть null");
+            throw new ValidationException("Film не может быть null");
         }
         if (film.getReleaseDate() == null) {
-            throw new IllegalArgumentException("ReleaseDate не может быть null");
+            throw new ValidationException("ReleaseDate не может быть null");
         }
 
         String query = "INSERT INTO FILMS (name, description, release_date, duration, rating_id)" +
@@ -74,7 +75,7 @@ public class FilmDbStorage implements FilmStorage {
         Long id = keyHolder.getKey() != null ? keyHolder.getKey().longValue() : null;
 
         if (id == null) {
-            throw new RuntimeException("Не удалось получить ID фильма после вставки");
+            throw new DataNotFoundException("Не удалось получить ID фильма после вставки");
         }
         film.setId(id);
         saveGenre(film);
@@ -187,10 +188,10 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Film update(Film film) {
         if (film == null) {
-            throw new IllegalArgumentException("Film не может быть null");
+            throw new ValidationException("Film не может быть null");
         }
         if (film.getId() == null) {
-            throw new IllegalArgumentException("ID фильма не может быть null");
+            throw new ValidationException("ID фильма не может быть null");
         }
 
         if (!filmExists(film.getId())) {

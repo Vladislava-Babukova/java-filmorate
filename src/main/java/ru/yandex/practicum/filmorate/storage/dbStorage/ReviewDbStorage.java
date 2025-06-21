@@ -40,7 +40,7 @@ public class ReviewDbStorage implements ReviewStorage {
         Long id = keyHolder.getKey() != null ? keyHolder.getKey().longValue() : null;
 
         if (id == null) {
-            throw new RuntimeException("Не удалось получить ID отзыва после вставки");
+            throw new DataNotFoundException("Не удалось получить ID отзыва после вставки");
         }
         review.setReviewId(id);
         return review;

@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -43,6 +45,7 @@ public class UserService {
     }
 
     public User create(User user) {
+        log.info("Начато создание пользователя");
         checkBirthday(user);
         nameCreate(user);
         user.setId(++generateId);
@@ -50,6 +53,7 @@ public class UserService {
     }
 
     public User update(User user) {
+        log.info("Начато обновление Пользователя");
         checkBirthday(user);
         nameCreate(user);
         return userStorage.update(user);
@@ -60,6 +64,7 @@ public class UserService {
     }
 
     public User addFriend(Long id, Long friendId) {
+        log.info("Добавляем пользователя {} в список друзей {}", friendId, id);
         User user = userStorage.getUser(id);
         User friend = userStorage.getUser(friendId);
         if (user == null || friend == null) {

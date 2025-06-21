@@ -2,16 +2,14 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.List;
 
-@Slf4j
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/films")
@@ -22,13 +20,12 @@ public class FilmController {
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        log.info("Начато создание фильма.Получен объект{}", film);
         return service.create(film);
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
-        log.info("Начато обновление фильма.Получен объект{}", film);
+
         return service.update(film);
     }
 
@@ -67,17 +64,14 @@ public class FilmController {
     @GetMapping("/director/{directorId}")
     public List<Film> getFilmsByDirector(@PathVariable Long directorId,
                                          @RequestParam(value = "sortBy", required = false, defaultValue = "year") String sortBy) {
-        if (!sortBy.equals("year") && !sortBy.equals("likes")) {
-            throw new IllegalArgumentException("Параметр sortBy должен быть 'year' или 'likes'");
-        }
         return service.getFilmsByDirector(directorId, sortBy);
     }
 
     //добавлена опция удаления фильма
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFilm(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteFilm(@PathVariable Long id) {
         service.deleteFilm(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/common")
@@ -89,7 +83,6 @@ public class FilmController {
     @GetMapping("/search")
     public List<Film> searchFilm(@RequestParam(required = false) String query,
                                  @RequestParam(required = false) List<String> by) {
-        log.info("инициирован запрос на поиск фильма по параметрам {}, текст для поиска: {}", by, query);
         return service.searchFilm(query, by);
     }
 
