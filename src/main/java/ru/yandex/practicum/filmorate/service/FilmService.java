@@ -1,30 +1,35 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.EventType;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.model.OperationType;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
-import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FilmService {
-    private final InMemoryFilmStorage storage;
-    private final UserService userService;
+
     private static final LocalDate RELEASE_DATE = LocalDate.of(1895, Month.DECEMBER, 28);
-    private long generateId = 0;
+    private final FilmStorage storage;
+    private final UserService userService;
+    private final EventService eventService;
+    private final long generateId = 0;
 
 
     public Film create(Film film) {
+        log.info("Начато создание фильма.Получен объект{}", film.getName());
         checkDate(film);
-        film.setId(++generateId);
         return storage.create(film);
     }
 
@@ -32,9 +37,17 @@ public class FilmService {
         if (film.getReleaseDate().isBefore(RELEASE_DATE)) {
             throw new ValidationException("Дата некорректна");
         }
+
+        if (film.getDescription().length() > 200) {
+            throw new ValidationException("Описание некорректно");
+        }
+        if (film.getDuration() < 0) {
+            throw new ValidationException("Длительность некорректна");
+        }
     }
 
     public Film update(Film film) {
+        log.info("Начато обновление фильма.Получен объект{}", film.getName());
         checkDate(film);
         return storage.update(film);
     }
@@ -44,42 +57,48 @@ public class FilmService {
     }
 
     public Film addLike(Long filmId, Long userId) {
-        Film film = storage.getFilm(filmId);
-        User user = userService.getUser(userId);
-        if (user == null) {
-            throw new DataNotFoundException("Пользователь не найден");
-        }
-        if (film == null) {
-            throw new DataNotFoundException("Фильм не найден");
-        }
-        Set<Long> list = film.getLikeSet();
-        list.add(userId);
-        film.setLikeSet(list);
-        return storage.update(film);
+        eventService.createEvent(Instant.now(), userId, EventType.LIKE, OperationType.ADD, filmId);
+        return storage.addLike(filmId, userId);
     }
 
     public Film deleteLike(Long filmId, Long userId) {
-        Film film = storage.getFilm(filmId);
-        User user = userService.getUser(userId);
-        if (film == null) {
-            throw new DataNotFoundException("Фильм не найден");
-        }
-        if (user == null) {
-            throw new DataNotFoundException("Пользователь не найден");
-        }
-        Set<Long> list = film.getLikeSet();
-        list.remove(userId);
-        film.setLikeSet(list);
-        return storage.update(film);
-
+        Film film = storage.deleteLike(filmId, userId);
+        eventService.createEvent(Instant.now(), userId, EventType.LIKE, OperationType.REMOVE, filmId);
+        return film;
     }
 
-    public List<Film> topFilms(Integer count) {
-        if (count < 1) {
-            throw new ValidationException("Некорректное значение размера");
-        }
-        return storage.topFilms(count);
+    // добавлены необходимые для новой логики параметры метода
 
+    public List<Film> getPopularFilms(int count, Integer genreId, Integer year) {
+        if (count < 1) {
+            throw new ValidationException("Некорректное значение count");
+        }
+        return storage.getPopularFilms(count, genreId, year);
+    }
+
+    public Film getFilm(Long id) {
+        return storage.getFilm(id);
+    }
+
+    //добавлена функция выдачи списка фильмов режисёра по его айди
+    public List<Film> getFilmsByDirector(Long directorId, String sortBy) {
+        if (!sortBy.equals("year") && !sortBy.equals("likes")) {
+            throw new DataNotFoundException("Параметр sortBy должен быть 'year' или 'likes'");
+        }
+        return storage.getFilmsByDirector(directorId, sortBy);
+    }
+
+    public List<Film> getCommonFilms(Long userId, Long friendId) {
+        return storage.getCommonFilms(userId, friendId);
+    }
+
+    public void deleteFilm(Long id) {
+        storage.deleteFilm(id);
+    }
+
+    public List<Film> searchFilm(String query, List<String> by) {
+        log.info("инициирован запрос на поиск фильма по параметрам {}, текст для поиска: {}", by, query);
+        return storage.searchFilm(query, by);
     }
 
 }
